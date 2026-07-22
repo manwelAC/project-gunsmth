@@ -1,14 +1,19 @@
 # Cloudflare R2 asset setup
 
-Project Gunsmth reads public asset URLs from:
+Project Gunsmth uses a same-origin Next.js proxy by default:
 
 ```env
-NEXT_PUBLIC_R2_ASSET_BASE_URL=https://your-public-asset-domain.example
+R2_ASSET_ORIGIN=https://your-public-r2-url.r2.dev
+NEXT_PUBLIC_R2_ASSET_BASE_URL=/r2-assets
 ```
 
-Use the public `r2.dev` URL during development or a custom public asset domain in production. Do not use the S3 API endpoint in this variable and do not expose account IDs, access keys, secret keys, or signed URLs to browser code.
+The browser requests `/r2-assets/<object-key>` from the same hostname as the website. Next.js then proxies that request to `R2_ASSET_ORIGIN`. Visitors therefore do not resolve `r2.dev`, and browser CORS does not apply. The proxy also enables Vercel rewrite caching for these responses.
 
-## Required CORS policy
+Do not use the S3 API endpoint and do not expose account IDs, access keys, secret keys, or signed URLs to browser code. The public development URL is not a secret, but keeping it in the server-side `R2_ASSET_ORIGIN` variable prevents browsers from depending on that hostname.
+
+## Optional CORS policy for direct R2 access
+
+The proxy does not require an R2 CORS policy because asset requests are same-origin from the browser's perspective. Apply the policy below only if another browser application will access R2 directly.
 
 Replace the production placeholder before applying this policy in the Cloudflare dashboard:
 

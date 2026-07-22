@@ -92,14 +92,15 @@ docs/
    Copy-Item .env.example .env.local
    ```
 
-3. Configure the public asset origin and site URL:
+3. Configure the server-side R2 origin, same-origin asset path, and site URL:
 
    ```env
-   NEXT_PUBLIC_R2_ASSET_BASE_URL=https://your-public-r2-url.r2.dev
+   R2_ASSET_ORIGIN=https://your-public-r2-url.r2.dev
+   NEXT_PUBLIC_R2_ASSET_BASE_URL=/r2-assets
    NEXT_PUBLIC_SITE_URL=http://localhost:3000
    ```
 
-   Use the public `r2.dev` URL during development. For production, replace it with a custom public asset domain. Do not use the R2 S3 API endpoint here and never expose R2 access keys or secret keys through `NEXT_PUBLIC_` variables.
+   Next.js proxies `/r2-assets/*` to R2, so browsers only contact the application origin and do not need to resolve `r2.dev` or pass cross-origin checks. Do not use the R2 S3 API endpoint and never expose R2 access keys or secret keys through `NEXT_PUBLIC_` variables.
 
 4. Start the development server:
 
@@ -120,7 +121,7 @@ docs/
 
 ## Cloudflare R2 assets
 
-Asset fields contain object keys rather than complete URLs. The application safely combines each key with `NEXT_PUBLIC_R2_ASSET_BASE_URL`.
+Asset fields contain object keys rather than complete URLs. The application combines each key with the same-origin `/r2-assets` proxy path, while Next.js retrieves the object from `R2_ASSET_ORIGIN`.
 
 The current bucket layout is:
 
@@ -149,7 +150,7 @@ Recommended content types:
 - `.webp`: `image/webp`
 - `.mp4`: `video/mp4`
 
-See [Cloudflare R2 asset setup](docs/R2_SETUP.md) for the required CORS policy, video range headers, and production guidance.
+See [Cloudflare R2 asset setup](docs/R2_SETUP.md) for proxy behavior, optional direct-access CORS, video range headers, and production guidance.
 
 ## Adding or editing a weapon
 
@@ -229,7 +230,8 @@ Point either export at a different weapon record when the featured study or late
 Set these environment variables in the hosting platform:
 
 ```env
-NEXT_PUBLIC_R2_ASSET_BASE_URL=https://assets.your-domain.example
+R2_ASSET_ORIGIN=https://your-public-r2-url.r2.dev
+NEXT_PUBLIC_R2_ASSET_BASE_URL=/r2-assets
 NEXT_PUBLIC_SITE_URL=https://your-site.example
 ```
 
@@ -241,7 +243,7 @@ npm run build
 npm run start
 ```
 
-`NEXT_PUBLIC_SITE_URL` is used for canonical URLs and metadata. The R2 public development URL is rate-limited, so a custom asset domain is recommended for a public production deployment.
+`NEXT_PUBLIC_SITE_URL` is used for canonical URLs and metadata. The same-origin proxy prevents visitor-side DNS and CORS failures and enables Vercel rewrite caching. Proxied asset transfer counts toward the hosting platform's bandwidth, so keep GLBs, thumbnails, and videos compressed.
 
 ## Project status
 

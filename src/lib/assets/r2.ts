@@ -1,4 +1,4 @@
-const R2_BASE_URL = process.env.NEXT_PUBLIC_R2_ASSET_BASE_URL;
+const R2_ASSET_BASE = process.env.NEXT_PUBLIC_R2_ASSET_BASE_URL;
 
 function encodeObjectKey(objectKey: string): string {
   const key = objectKey.trim().replace(/^\/+/, "");
@@ -15,26 +15,31 @@ function encodeObjectKey(objectKey: string): string {
 }
 
 export function getR2AssetUrl(objectKey: string): string {
-  if (!R2_BASE_URL?.trim()) {
+  if (!R2_ASSET_BASE?.trim()) {
     throw new Error(
-      "NEXT_PUBLIC_R2_ASSET_BASE_URL is not configured. Add the public R2 asset origin to .env.local.",
+      "NEXT_PUBLIC_R2_ASSET_BASE_URL is not configured. Add the same-origin proxy path or public asset origin to .env.local.",
     );
   }
 
-  const origin = R2_BASE_URL.trim().replace(/\/+$/, "");
+  const base = R2_ASSET_BASE.trim().replace(/\/+$/, "");
+
+  if (base.startsWith("/")) {
+    return `${base}/${encodeObjectKey(objectKey)}`;
+  }
 
   try {
-    const parsedOrigin = new URL(origin);
+    const parsedOrigin = new URL(base);
     if (!['http:', 'https:'].includes(parsedOrigin.protocol)) {
-      throw new Error("The R2 asset origin must use HTTP or HTTPS.");
+      throw new Error("The asset origin must use HTTP or HTTPS.");
     }
   } catch (error) {
     if (error instanceof Error && error.message.includes("must use")) {
       throw error;
     }
-    throw new Error("NEXT_PUBLIC_R2_ASSET_BASE_URL must be a valid URL.");
+    throw new Error(
+      "NEXT_PUBLIC_R2_ASSET_BASE_URL must be a root-relative path or valid URL.",
+    );
   }
 
-  return `${origin}/${encodeObjectKey(objectKey)}`;
+  return `${base}/${encodeObjectKey(objectKey)}`;
 }
-
