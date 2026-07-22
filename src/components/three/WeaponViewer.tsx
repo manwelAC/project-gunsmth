@@ -11,6 +11,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import type { Weapon } from "@/types/weapon";
+import type { ViewerPresentation } from "@/types/viewer";
 import { ViewerControls } from "./ViewerControls";
 import { ViewerError } from "./ViewerError";
 import { ViewerLoading } from "./ViewerLoading";
@@ -97,9 +98,26 @@ function useViewerActivity() {
 interface WeaponViewerProps {
   weapon: Weapon;
   compact?: boolean;
+  paused?: boolean;
+  inspection?: boolean;
+  showControls?: boolean;
+  captureEnabled?: boolean;
+  presentation?: ViewerPresentation;
+  onCanvasReady?: (canvas: HTMLCanvasElement | null) => void;
+  onModelReady?: () => void;
 }
 
-export function WeaponViewer({ weapon, compact = false }: WeaponViewerProps) {
+export function WeaponViewer({
+  weapon,
+  compact = false,
+  paused = false,
+  inspection = false,
+  showControls = true,
+  captureEnabled = false,
+  presentation,
+  onCanvasReady,
+  onModelReady,
+}: WeaponViewerProps) {
   const webglAvailable = useSyncExternalStore(
     subscribeToBrowserCapability,
     supportsWebGL,
@@ -118,7 +136,12 @@ export function WeaponViewer({ weapon, compact = false }: WeaponViewerProps) {
   );
 
   return (
-    <div ref={viewerRef} className="weapon-viewer" data-compact={compact}>
+    <div
+      ref={viewerRef}
+      className="weapon-viewer"
+      data-compact={compact}
+      data-inspection={inspection}
+    >
       <span className="weapon-viewer__corner weapon-viewer__corner--tl" aria-hidden="true" />
       <span className="weapon-viewer__corner weapon-viewer__corner--tr" aria-hidden="true" />
       <span className="weapon-viewer__corner weapon-viewer__corner--bl" aria-hidden="true" />
@@ -126,13 +149,21 @@ export function WeaponViewer({ weapon, compact = false }: WeaponViewerProps) {
 
       {webglAvailable ? (
         <ModelErrorBoundary key={instance} fallback={fallback}>
-          <WeaponCanvas weapon={weapon} active={active} />
+          <WeaponCanvas
+            weapon={weapon}
+            active={active && !paused}
+            inspection={inspection}
+            captureEnabled={captureEnabled}
+            presentation={presentation}
+            onCanvasReady={onCanvasReady}
+            onModelReady={onModelReady}
+          />
         </ModelErrorBoundary>
       ) : (
         fallback
       )}
 
-      <ViewerControls weapon={weapon} compact={compact} />
+      {showControls ? <ViewerControls weapon={weapon} compact={compact} /> : null}
       <p className="sr-only">
         Interactive 3D model of {weapon.name}. Drag to rotate it and use the
         mouse wheel or pinch gesture to zoom. A poster and description are

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { SectionContainer } from "@/components/layout/SectionContainer";
-import { WeaponViewer } from "@/components/three/WeaponViewer";
+import { WeaponInspectionMode } from "@/components/three/WeaponInspectionMode";
 import { Button } from "@/components/ui/Button";
 import { StatusIndicator } from "@/components/ui/StatusIndicator";
 import { TechnicalLabel } from "@/components/ui/TechnicalLabel";
@@ -65,7 +65,7 @@ export function WeaponDetails({ weapon }: WeaponDetailsProps) {
               <span>Interactive asset</span>
               <strong>360°</strong>
             </div>
-            <WeaponViewer weapon={weapon} compact />
+            <WeaponInspectionMode weapon={weapon} />
           </div>
 
           <span className="weapon-file__serial" aria-hidden="true">
