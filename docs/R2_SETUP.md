@@ -61,13 +61,11 @@ assault-rifles/
   HVK.glb
   ak117.glb
 
-images/
-  weapons/
-  posters/
+thumbnails/
+  ak47-thumbnail.jpg
 
 videos/
-  demos/
+  AK47-demo.mp4
 ```
 
 If the bucket becomes private, browser-side signing must not be added. Private objects require a secure server-side signing route and a separate implementation decision.
-

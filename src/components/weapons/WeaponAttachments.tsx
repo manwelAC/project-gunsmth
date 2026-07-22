@@ -14,7 +14,7 @@ export function WeaponAttachments({ build }: WeaponAttachmentsProps) {
   const configuredCount = countConfiguredAttachments(build.attachments);
 
   return (
-    <div className="weapon-attachments">
+    <div className="weapon-attachments" id="attachments">
       <div className="weapon-attachments__header">
         <div>
           <TechnicalLabel index="02">Attachments</TechnicalLabel>

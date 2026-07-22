@@ -55,7 +55,7 @@ export function WeaponDetails({ weapon }: WeaponDetailsProps) {
             </dl>
 
             <div className="weapon-file__hero-actions">
-              <Button href="#model-inspector">Inspect model</Button>
+              <Button href="#attachments">View attachments</Button>
               <Button href="#field-test" variant="secondary">Field test</Button>
             </div>
           </div>

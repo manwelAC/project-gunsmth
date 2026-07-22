@@ -36,6 +36,7 @@ export function MediaPlaceholder({
           fill
           sizes={sizes}
           priority={priority}
+          unoptimized
           onError={() => setFailedSource(src)}
         />
       ) : (

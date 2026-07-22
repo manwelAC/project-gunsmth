@@ -17,17 +17,31 @@ export function Button({
   className,
   ariaLabel,
 }: ButtonProps) {
-  return (
-    <Link
-      href={href}
-      className={cn("button", `button--${variant}`, className)}
-      aria-label={ariaLabel}
-    >
+  const classes = cn("button", `button--${variant}`, className);
+  const content = (
+    <>
       <span>{children}</span>
       <span className="button__arrow" aria-hidden="true">
         ↗
       </span>
+    </>
+  );
+
+  if (href.startsWith("#")) {
+    return (
+      <a href={href} className={classes} aria-label={ariaLabel}>
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <Link
+      href={href}
+      className={classes}
+      aria-label={ariaLabel}
+    >
+      {content}
     </Link>
   );
 }
-

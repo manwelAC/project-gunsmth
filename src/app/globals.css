@@ -1053,9 +1053,11 @@ canvas {
 .armory-section {
   position: relative;
   padding-block: clamp(6rem, 10vw, 9rem);
-  background:
-    linear-gradient(90deg, transparent calc(100% - var(--page-gutter)), rgb(255 255 255 / 4%) calc(100% - var(--page-gutter))),
-    var(--color-background);
+  background: var(--color-background);
+}
+
+.armory-section__container {
+  width: 100%;
 }
 
 .section-intro {
@@ -1090,19 +1092,30 @@ canvas {
   background: linear-gradient(90deg, var(--color-accent) 0 32px, var(--color-border) 32px);
 }
 
+.weapon-grid-shell {
+  margin-inline: calc(var(--page-gutter) * -1);
+}
+
 .weapon-filters {
   display: flex;
   overflow-x: auto;
+  overflow-y: hidden;
   align-items: stretch;
   margin-bottom: 2rem;
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
-  scrollbar-width: thin;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: none;
+}
+
+.weapon-filters::-webkit-scrollbar {
+  display: none;
 }
 
 .weapon-filters button {
   position: relative;
   display: flex;
+  flex: 1 0 auto;
   min-width: max-content;
   min-height: 58px;
   align-items: center;
@@ -2108,7 +2121,7 @@ canvas {
   margin: 0;
   color: rgb(17 18 20 / 50%);
   font-family: var(--font-mono), monospace;
-  font-size: 0.52rem;
+  font-size: 0.6rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -2158,13 +2171,13 @@ canvas {
 
 .weapon-dossier__specs > div {
   display: flex;
-  min-height: 57px;
+  min-height: 61px;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
   border-bottom: 1px solid rgb(17 18 20 / 22%);
   font-family: var(--font-mono), monospace;
-  font-size: 0.57rem;
+  font-size: 0.65rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }

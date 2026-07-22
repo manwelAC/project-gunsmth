@@ -6,7 +6,7 @@ import { WeaponGrid } from "@/components/weapons/WeaponGrid";
 export function ArmorySection() {
   return (
     <section className="armory-section" id="armory" aria-labelledby="armory-title">
-      <SectionContainer>
+      <SectionContainer className="armory-section__container">
         <div className="section-intro">
           <div>
             <TechnicalLabel index="02">Browse the archive</TechnicalLabel>

@@ -43,7 +43,18 @@ src/
     ui/                      Reusable interface components
     weapons/                 Archive cards, filters, details, and statistics
   config/                    Site and navigation configuration
-  data/weapons.ts            Weapon records and featured/latest selections
+  data/
+    weapons.ts               Combined weapon index and lookup helpers
+    weapons/                 Records split by weapon class
+      assault.ts
+      smg.ts
+      shotgun.ts
+      sniper.ts
+      lmg.ts
+      marksman.ts
+      pistol.ts
+      launcher.ts
+      melee.ts
   hooks/                     Media-query and accessibility hooks
   lib/assets/                R2 asset URL helpers
   types/weapon.ts            Weapon, build, attachment, and asset types
@@ -123,12 +134,11 @@ assault-rifles/
   HVK.glb
   ak117.glb
 
-images/
-  weapons/
-  posters/
+thumbnails/
+  ak47-thumbnail.jpg
 
 videos/
-  demos/
+  AK47-demo.mp4
 ```
 
 R2 object keys are case-sensitive. For example, `assault-rifles/AK47.glb` and `assault-rifles/ak47.glb` are different objects.
@@ -143,7 +153,7 @@ See [Cloudflare R2 asset setup](docs/R2_SETUP.md) for the required CORS policy, 
 
 ## Adding or editing a weapon
 
-Weapon content is maintained in [`src/data/weapons.ts`](src/data/weapons.ts). Each record automatically produces an armory card and a statically generated weapon page.
+Weapon records are maintained by class in [`src/data/weapons/`](src/data/weapons). For example, assault-rifle records belong in [`assault.ts`](src/data/weapons/assault.ts). Each record is collected by [`src/data/weapons.ts`](src/data/weapons.ts) and automatically produces an armory card and a statically generated weapon page.
 
 ```ts
 {
@@ -169,9 +179,9 @@ Weapon content is maintained in [`src/data/weapons.ts`](src/data/weapons.ts). Ea
   releaseDate: "2026-07-21",
   assets: {
     modelKey: "assault-rifles/Weapon.glb",
-    thumbnailKey: "images/weapons/weapon.webp",
-    posterKey: "images/posters/weapon.webp",
-    videoKey: "videos/demos/weapon.mp4",
+    thumbnailKey: "thumbnails/weapon-thumbnail.jpg",
+    posterKey: "posters/weapon-poster.jpg",
+    videoKey: "videos/weapon-demo.mp4",
   },
   statistics: {
     damage: 70,

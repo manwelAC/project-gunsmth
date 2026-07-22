@@ -10,7 +10,7 @@ export function WeaponGrid() {
     useWeaponFilters();
 
   return (
-    <div>
+    <div className="weapon-grid-shell">
       <WeaponFilters
         activeFilter={activeFilter}
         counts={counts}
@@ -39,4 +39,3 @@ export function WeaponGrid() {
     </div>
   );
 }
-
