@@ -54,20 +54,32 @@ function ModelAsset({ weapon }: { weapon: Weapon }) {
   );
 }
 
-export function WeaponCanvas({ weapon }: { weapon: Weapon }) {
+export function WeaponCanvas({
+  weapon,
+  active = true,
+}: {
+  weapon: Weapon;
+  active?: boolean;
+}) {
   const mobile = useMediaQuery("(max-width: 700px)");
   const reducedMotion = useReducedMotionPreference();
 
   return (
     <Canvas
-      dpr={mobile ? [1, 1.35] : [1, 1.75]}
+      dpr={mobile ? [1, 1.2] : [1, 1.5]}
+      frameloop={active ? "always" : "never"}
       camera={{
         fov: mobile ? 38 : 32,
         near: 0.01,
         far: 100,
         position: mobile ? [0, 0.2, 6.5] : [0, 0.2, 5.5],
       }}
-      gl={{ antialias: !mobile, alpha: true, powerPreference: "high-performance" }}
+      gl={{
+        antialias: !mobile,
+        alpha: true,
+        powerPreference: "high-performance",
+        stencil: false,
+      }}
       onCreated={({ gl }) => {
         gl.outputColorSpace = SRGBColorSpace;
         gl.toneMapping = ACESFilmicToneMapping;
@@ -104,7 +116,7 @@ export function WeaponCanvas({ weapon }: { weapon: Weapon }) {
         intensity={2.8}
         color="#f2efe8"
       />
-      <Environment resolution={256}>
+      <Environment resolution={128}>
         <Lightformer
           form="rect"
           intensity={3.5}

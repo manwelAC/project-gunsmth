@@ -5,6 +5,8 @@ import {
   Component,
   type ErrorInfo,
   type ReactNode,
+  useEffect,
+  useRef,
   useState,
   useSyncExternalStore,
 } from "react";
@@ -56,6 +58,42 @@ function supportsWebGL(): boolean {
 
 const subscribeToBrowserCapability = () => () => undefined;
 
+function useViewerActivity() {
+  const viewerRef = useRef<HTMLDivElement>(null);
+  const [isNearViewport, setIsNearViewport] = useState(true);
+  const [isPageVisible, setIsPageVisible] = useState(true);
+
+  useEffect(() => {
+    const viewer = viewerRef.current;
+
+    if (!viewer || !("IntersectionObserver" in window)) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsNearViewport(entry.isIntersecting),
+      { rootMargin: "200px 0px" },
+    );
+
+    observer.observe(viewer);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsPageVisible(document.visibilityState === "visible");
+    };
+
+    handleVisibilityChange();
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
+  return { viewerRef, active: isNearViewport && isPageVisible };
+}
+
 interface WeaponViewerProps {
   weapon: Weapon;
   compact?: boolean;
@@ -68,6 +106,7 @@ export function WeaponViewer({ weapon, compact = false }: WeaponViewerProps) {
     () => false,
   );
   const [instance, setInstance] = useState(0);
+  const { viewerRef, active } = useViewerActivity();
 
   const fallback = (
     <ViewerError
@@ -79,7 +118,7 @@ export function WeaponViewer({ weapon, compact = false }: WeaponViewerProps) {
   );
 
   return (
-    <div className="weapon-viewer" data-compact={compact}>
+    <div ref={viewerRef} className="weapon-viewer" data-compact={compact}>
       <span className="weapon-viewer__corner weapon-viewer__corner--tl" aria-hidden="true" />
       <span className="weapon-viewer__corner weapon-viewer__corner--tr" aria-hidden="true" />
       <span className="weapon-viewer__corner weapon-viewer__corner--bl" aria-hidden="true" />
@@ -87,7 +126,7 @@ export function WeaponViewer({ weapon, compact = false }: WeaponViewerProps) {
 
       {webglAvailable ? (
         <ModelErrorBoundary key={instance} fallback={fallback}>
-          <WeaponCanvas weapon={weapon} />
+          <WeaponCanvas weapon={weapon} active={active} />
         </ModelErrorBoundary>
       ) : (
         fallback
