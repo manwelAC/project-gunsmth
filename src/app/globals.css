@@ -322,48 +322,77 @@ canvas {
 .site-brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.8rem;
-  font-family: var(--font-interface), sans-serif;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
+  gap: 0.85rem;
   text-transform: uppercase;
 }
 
 .gunsmth-mark {
-  position: relative;
-  display: grid;
-  width: 25px;
-  height: 25px;
+  display: block;
+  width: 30px;
+  height: 30px;
   flex: 0 0 auto;
-  place-items: center;
-  border: 1px solid var(--color-text-secondary);
-  transform: rotate(45deg);
+  overflow: visible;
+  color: var(--color-text-primary);
 }
 
-.gunsmth-mark::before,
-.gunsmth-mark::after,
-.gunsmth-mark span::before,
-.gunsmth-mark span::after {
-  position: absolute;
-  background: var(--color-accent);
-  content: "";
+.gunsmth-mark__frame,
+.gunsmth-mark__reticle,
+.gunsmth-mark__ticks {
+  fill: none;
+  vector-effect: non-scaling-stroke;
 }
 
-.gunsmth-mark::before {
-  width: 1px;
-  height: 31px;
+.gunsmth-mark__frame {
+  stroke: currentColor;
+  stroke-width: 1.4;
+  transition: stroke 180ms ease;
 }
 
-.gunsmth-mark::after {
-  width: 31px;
-  height: 1px;
+.gunsmth-mark__reticle {
+  stroke: var(--color-text-muted);
+  stroke-width: 1;
 }
 
-.gunsmth-mark span::before {
-  width: 5px;
-  height: 5px;
-  transform: translate(-50%, -50%);
+.gunsmth-mark__ticks {
+  stroke: var(--color-accent);
+  stroke-width: 1.4;
+}
+
+.gunsmth-mark__core {
+  fill: var(--color-accent);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 240ms var(--ease-out-expo);
+}
+
+.site-brand:hover .gunsmth-mark__frame {
+  stroke: white;
+}
+
+.site-brand:hover .gunsmth-mark__core {
+  transform: rotate(45deg) scale(0.86);
+}
+
+.site-brand__wordmark {
+  display: grid;
+  gap: 0.12rem;
+  line-height: 1;
+}
+
+.site-brand__wordmark > span {
+  color: var(--color-text-muted);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.42rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+}
+
+.site-brand__wordmark strong {
+  color: var(--color-text-primary);
+  font-family: var(--font-interface), sans-serif;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
 }
 
 .site-navigation {
@@ -2953,8 +2982,13 @@ canvas {
 }
 
 @media (max-width: 520px) {
-  .site-brand {
-    font-size: 0.65rem;
+  .gunsmth-mark {
+    width: 28px;
+    height: 28px;
+  }
+
+  .site-brand__wordmark strong {
+    font-size: 0.7rem;
   }
 
   .hero__title {

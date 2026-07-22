@@ -2,16 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { GunsmthMark } from "@/components/brand/GunsmthMark";
 import { navigationItems } from "@/config/navigation";
 import { MobileNavigation } from "./MobileNavigation";
-
-export function GunsmthMark() {
-  return (
-    <span className="gunsmth-mark" aria-hidden="true">
-      <span />
-    </span>
-  );
-}
 
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -65,7 +58,10 @@ export function SiteHeader() {
       <div className="site-header__inner">
         <Link href="/" className="site-brand" aria-label="Project Gunsmth home">
           <GunsmthMark />
-          <span>Project Gunsmth</span>
+          <span className="site-brand__wordmark" aria-hidden="true">
+            <span>Project</span>
+            <strong>Gunsmth</strong>
+          </span>
         </Link>
 
         <nav className="site-navigation" aria-label="Primary navigation">
@@ -105,4 +101,3 @@ export function SiteHeader() {
     </header>
   );
 }
-

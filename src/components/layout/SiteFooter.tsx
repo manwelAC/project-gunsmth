@@ -1,6 +1,6 @@
 import Link from "next/link";
+import { GunsmthMark } from "@/components/brand/GunsmthMark";
 import { navigationItems } from "@/config/navigation";
-import { GunsmthMark } from "./SiteHeader";
 import { SectionContainer } from "./SectionContainer";
 
 export function SiteFooter() {
@@ -48,4 +48,3 @@ export function SiteFooter() {
     </footer>
   );
 }
-
