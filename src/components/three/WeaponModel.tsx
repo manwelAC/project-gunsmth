@@ -16,6 +16,7 @@ import { Canvas, useThree } from "@react-three/fiber";
 import { Suspense, useEffect } from "react";
 import {
   ACESFilmicToneMapping,
+  Color,
   Mesh,
   type Object3D,
   SRGBColorSpace,
@@ -34,6 +35,7 @@ import { ViewerLoading } from "./ViewerLoading";
 
 interface LightingConfiguration {
   background: string;
+  exposure: number;
   ambient: number;
   hemisphere: number;
   hemisphereColor: string;
@@ -54,6 +56,7 @@ interface LightingConfiguration {
 const LIGHTING: Record<ViewerLightingPreset, LightingConfiguration> = {
   studio: {
     background: "#08090a",
+    exposure: 1.24,
     ambient: 0.9,
     hemisphere: 1.35,
     hemisphereColor: "#fff8e9",
@@ -72,6 +75,7 @@ const LIGHTING: Record<ViewerLightingPreset, LightingConfiguration> = {
   },
   tactical: {
     background: "#080705",
+    exposure: 1.16,
     ambient: 0.42,
     hemisphere: 0.82,
     hemisphereColor: "#ffd8bc",
@@ -90,6 +94,7 @@ const LIGHTING: Record<ViewerLightingPreset, LightingConfiguration> = {
   },
   cold: {
     background: "#060a0e",
+    exposure: 1.2,
     ambient: 0.62,
     hemisphere: 1.15,
     hemisphereColor: "#d8efff",
@@ -108,6 +113,7 @@ const LIGHTING: Record<ViewerLightingPreset, LightingConfiguration> = {
   },
   silhouette: {
     background: "#030404",
+    exposure: 1.06,
     ambient: 0.08,
     hemisphere: 0.18,
     hemisphereColor: "#55616a",
@@ -151,17 +157,27 @@ function SceneConfiguration({
   captureEnabled: boolean;
   onCanvasReady?: (canvas: HTMLCanvasElement | null) => void;
 }) {
-  const { gl } = useThree();
+  const { gl, scene, invalidate } = useThree();
   const configuration = LIGHTING[preset];
+
+  useEffect(() => {
+    gl.toneMappingExposure = configuration.exposure;
+    scene.background = captureEnabled
+      ? new Color(configuration.background)
+      : null;
+    invalidate();
+
+    return () => {
+      scene.background = null;
+    };
+  }, [captureEnabled, configuration, gl, invalidate, scene]);
 
   useEffect(() => {
     onCanvasReady?.(gl.domElement);
     return () => onCanvasReady?.(null);
   }, [gl, onCanvasReady]);
 
-  return captureEnabled ? (
-    <color attach="background" args={[configuration.background]} />
-  ) : null;
+  return null;
 }
 
 function SceneLighting({ preset }: { preset: ViewerLightingPreset }) {
@@ -359,7 +375,6 @@ export function WeaponCanvas({
       onCreated={({ gl }) => {
         gl.outputColorSpace = SRGBColorSpace;
         gl.toneMapping = ACESFilmicToneMapping;
-        gl.toneMappingExposure = 1.24;
       }}
     >
       <SceneConfiguration

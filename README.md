@@ -9,6 +9,7 @@ Created by **Mxnwel**, a COD:M player since 2020 and a web designer carrying his
 ## Features
 
 - Interactive GLB weapon viewer with rotation, wheel or pinch zoom, bounded camera controls, and subtle idle motion
+- Full-screen Cinematic Inspection mode with lighting presets, tech-scan rendering, camera framing, turntable speed, clean-interface viewing, and PNG capture formats
 - Responsive armory with weapon-class filters and fully clickable weapon cards
 - Statically generated detail pages at `/weapons/[slug]`
 - Eight COD:M attachment categories with a five-attachment loadout limit
@@ -57,7 +58,7 @@ src/
       melee.ts
   hooks/                     Media-query and accessibility hooks
   lib/assets/                R2 asset URL helpers
-  types/weapon.ts            Weapon, build, attachment, and asset types
+  types/                     Weapon data and 3D viewer-presentation types
 
 docs/
   R2_SETUP.md                R2 CORS, metadata, and object-layout guidance
